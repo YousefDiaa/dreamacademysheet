@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { MOCK_STUDENTS } from "../../src/data/mockStudents.js";
+import { MOCK_STUDENTS } from "../src/data/mockStudents.js";
 
 let client: MongoClient | null = null;
 
