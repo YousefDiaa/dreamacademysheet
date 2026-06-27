@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import { MongoClient, Db, Collection } from "mongodb";
 import { MOCK_STUDENTS } from "./src/data/mockStudents";
 import { Student } from "./src/types";
@@ -92,15 +91,14 @@ async function ensureMongoConnected(): Promise<boolean> {
   return await connectToMongoDB();
 }
 
-async function startServer() {
-  const app = express();
-  const PORT = 3000;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-  // Initialize and connect to MongoDB directly
-  await connectToMongoDB();
+// Initialize MongoDB without blocking the module export
+connectToMongoDB().catch(err => console.error("Initial MongoDB Connection Error:", err));
 
-  // Middleware to parse JSON bodies
-  app.use(express.json());
+// Middleware to parse JSON bodies
+app.use(express.json());
 
   // Real Server-Side Student Login
   app.post("/api/login", async (req, res) => {
@@ -568,12 +566,15 @@ async function startServer() {
   });
 
   // Mount Vite middleware for development (or serve static files in production)
-  if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
+  if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+    // Dynamic import to prevent Vercel serverless from blowing up looking for Vite
+    import("vite").then(async (vite) => {
+      const viteServer = await vite.createServer({
+        server: { middlewareMode: true },
+        appType: "spa",
+      });
+      app.use(viteServer.middlewares);
+    }).catch(err => console.error("Failed to load vite:", err));
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
@@ -582,11 +583,12 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
+  // Only start the listener if we're not in a serverless environment like Vercel
+  if (!process.env.VERCEL) {
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  }
 
-startServer().catch((err) => {
-  console.error("Failed to start server:", err);
-});
+// Export for Vercel Serverless Functions
+export default app;
