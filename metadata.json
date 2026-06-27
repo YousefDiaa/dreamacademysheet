@@ -1,0 +1,6 @@
+{
+  "name": "منصة متابعة المناهج",
+  "description": "منصة تعليمية متكاملة لمتابعة المناهج والدروس للطلاب بالتكامل مع جوجل شيت وجوجل أب سكريبت",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
