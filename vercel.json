@@ -2,13 +2,13 @@
   "version": 2,
   "buildCommand": "vite build",
   "outputDirectory": "dist",
-  "routes": [
-    { "src": "/api/login", "dest": "/api/login.ts" },
-    { "src": "/api/toggle-lesson", "dest": "/api/toggle-lesson.ts" },
-    { "src": "/api/update-profile", "dest": "/api/update-profile.ts" },
-    { "src": "/api/all-students", "dest": "/api/all-students.ts" },
-    { "src": "/api/student-data", "dest": "/api/student-data.ts" },
-    { "src": "/api/update-records", "dest": "/api/update-records.ts" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/api/login", "destination": "/api/login.ts" },
+    { "source": "/api/toggle-lesson", "destination": "/api/toggle-lesson.ts" },
+    { "source": "/api/update-profile", "destination": "/api/update-profile.ts" },
+    { "source": "/api/all-students", "destination": "/api/all-students.ts" },
+    { "source": "/api/student-data", "destination": "/api/student-data.ts" },
+    { "source": "/api/update-records", "destination": "/api/update-records.ts" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
