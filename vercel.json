@@ -1,9 +1,19 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/node"
     }
+  },
+  "routes": [
+    { "src": "/api/login", "dest": "/api/login.ts" },
+    { "src": "/api/toggle-lesson", "dest": "/api/toggle-lesson.ts" },
+    { "src": "/api/update-profile", "dest": "/api/update-profile.ts" },
+    { "src": "/api/all-students", "dest": "/api/all-students.ts" },
+    { "src": "/api/student-data", "dest": "/api/student-data.ts" },
+    { "src": "/api/update-records", "dest": "/api/update-records.ts" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
